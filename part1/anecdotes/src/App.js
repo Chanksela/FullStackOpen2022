@@ -16,11 +16,12 @@ const BestAnecdote = ({ maxVotedQuote, maxVotes }) => {
   return (
     <>
       <h1>Anecdote with the most votes</h1>
-      <p>{maxVotedQuote}</p>
-      <p>It has {maxVotes} votes</p>
+      <p>{maxVotes > 0 ? maxVotedQuote : "No anecdote has been voted"}</p>
+      <p>{maxVotes > 0 ? `It has ${maxVotes} votes` : ""}</p>
     </>
   );
 };
+
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often",
@@ -44,12 +45,10 @@ const App = () => {
     copy[selected] += 1;
     setVote(copy);
   };
+  console.log(vote);
 
   const maxVotes = Math.max(...vote);
   const maxVotedQuote = anecdotes[vote.indexOf(maxVotes)];
-  {
-    console.log(maxVotedQuote);
-  }
   return (
     <div>
       <Anecdote anecdotes={anecdotes} selected={selected} vote={vote} />
