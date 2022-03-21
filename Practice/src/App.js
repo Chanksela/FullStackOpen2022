@@ -1,31 +1,19 @@
-const Footer = () => {
-  return (
-    <div>
-      greeting app created by{" "}
-      <a href="https://github.com/chanksela">Chanksela</a>
-    </div>
-  );
-};
-const Hello = (props) => {
-  return (
-    <div>
-      <p>
-        Hello {props.name}, you are {props.age} years old
-      </p>
-    </div>
-  );
-};
-
+import { useState } from "react";
 const App = () => {
-  const name = "Peter";
-  const age = 10;
+  const [value, setValue] = useState(10);
+
+  const setToValue = (newValue) => () => {
+    console.log("value now", newValue); // print the new value to console
+    setValue(newValue);
+  };
+
   return (
-    <>
-      <h1>Greetings</h1>
-      <Hello name={"Maya"} age={10 + 26} />
-      <Hello name={name} age={age} />
-      <Footer />
-    </>
+    <div>
+      {value}
+      <button onClick={setToValue(1000)}>thousand</button>
+      <button onClick={setToValue(0)}>reset</button>
+      <button onClick={setToValue(value + 1)}>increment</button>
+    </div>
   );
 };
 
