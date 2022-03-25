@@ -1,6 +1,6 @@
 import React from "react";
-
-export const Country = ({ filteredCountries }) => {
+import { Weather } from "./Weather";
+export const Country = ({ filteredCountries, searchInput }) => {
   return (
     <div>
       {filteredCountries.map((country) => (
@@ -14,7 +14,8 @@ export const Country = ({ filteredCountries }) => {
               <li>{val}</li>
             </ul>
           ))}
-          <img src={country.flags.png} />
+          <img src={country.flags.png} alt="country_flag" />
+          <Weather city={country.capital} />
         </div>
       ))}
     </div>

@@ -20,13 +20,10 @@ function App() {
   const handleSearch = (e) => {
     setSearchInput(e.target.value);
   };
-  const showInfo = (countryName) => {
-    setSearchInput(countryName);
-  };
+
   return (
     <div>
       <SearchBar searchInput={searchInput} handleSearch={handleSearch} />
-
       <List filteredCountries={filteredCountries} searchInput={searchInput} />
     </div>
   );
