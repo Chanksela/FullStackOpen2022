@@ -22,14 +22,13 @@ export const Weather = ({ city }) => {
   return (
     <div>
       <h2>Weather in {city}</h2>
-      {console.log(currentWeather?.main)}
-      <p>Temperature: {currentWeather?.main?.temp}</p>
+      <p>Temperature: {currentWeather?.main?.temp} °C</p>
       {currentWeather.length === 0 ? (
         ""
       ) : (
         <img src={iconURL} alt="weather_icon" />
       )}
-      <p>Wind: {currentWeather?.wind?.speed}</p>
+      <p>Wind: {currentWeather?.wind?.speed} m/s</p>
     </div>
   );
 };
