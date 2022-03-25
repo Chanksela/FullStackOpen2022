@@ -11,7 +11,6 @@ function App() {
   const [searchInput, setSearchInput] = useState("");
   useEffect(() => {
     axios.get("http://localhost:3001/persons").then((res) => {
-      console.log(res.data);
       setPersons(res.data);
     });
   }, []);
@@ -39,12 +38,11 @@ function App() {
   };
   const handleSearchInput = (e) => {
     setSearchInput(e.target.value);
-    console.log(e.target.value);
   };
   const filteredArray = persons.filter((val) =>
     val.name.toLowerCase().includes(searchInput)
   );
-  console.log(filteredArray);
+
   return (
     <div>
       <h2>Phonebook</h2>
