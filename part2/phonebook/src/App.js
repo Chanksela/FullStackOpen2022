@@ -17,16 +17,35 @@ function App() {
   const addPerson = (e) => {
     e.preventDefault();
     const newPerson = { name: newName, number: newNumber };
-    const matchName = persons.filter(
+    const matchName = persons.find(
       (person) => person.name.toLowerCase() === newName.toLowerCase()
     );
-    {
-      matchName.length > 0
-        ? alert(`${newName}${newNumber} is already added to phonebook`)
-        : personsService
-            .addPerson(newPerson)
-            .then((addedPerson) => setPersons(persons.concat(addedPerson)));
+    const changedNum = { ...newPerson, number: newNumber };
+    const id = matchName?.id;
+    console.log(matchName);
+    console.log(newNumber.toString());
+    if (matchName && newNumber.length > 0) {
+      const result = window.confirm(
+        `${newName} already has a number, do you want to update it?`
+      );
+      result &&
+        personsService
+          .updateInfo(id, changedNum)
+          .then((returnedPerson) =>
+            setPersons(
+              persons.map((person) =>
+                person.id !== id ? person : returnedPerson
+              )
+            )
+          );
+    } else if (matchName) {
+      alert(`${newName} already exists`);
+    } else if (!matchName) {
+      personsService
+        .addPerson(newPerson)
+        .then((addedPerson) => setPersons(persons.concat(addedPerson)));
     }
+
     setNewName("");
     setNewNumber("");
   };
