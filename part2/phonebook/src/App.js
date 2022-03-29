@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Filter } from "./components/Filter";
 import { PersonForm } from "./components/PersonForm";
@@ -11,8 +10,8 @@ function App() {
   const [newNumber, setNewNumber] = useState("");
   const [searchInput, setSearchInput] = useState("");
   useEffect(() => {
-    personsService.getAll().then((res) => {
-      setPersons(res.data);
+    personsService.getAll().then((persons) => {
+      setPersons(persons);
     });
   }, []);
   const addPerson = (e) => {
@@ -26,7 +25,7 @@ function App() {
         ? alert(`${newName}${newNumber} is already added to phonebook`)
         : personsService
             .addPerson(newPerson)
-            .then(setPersons(persons.concat(newPerson)));
+            .then((addedPerson) => setPersons(persons.concat(addedPerson)));
     }
     setNewName("");
     setNewNumber("");
@@ -39,6 +38,14 @@ function App() {
   };
   const handleSearchInput = (e) => {
     setSearchInput(e.target.value);
+  };
+  const handleDelete = (id) => {
+    const personName = persons.find((person) => person.id === id);
+    const result = window.confirm(`Delete ${personName.name}?`);
+    result &&
+      personsService
+        .removePerson(id)
+        .then(setPersons(persons.filter((person) => person.id !== id)));
   };
   const filteredArray = persons.filter((val) =>
     val.name.toLowerCase().includes(searchInput)
@@ -57,7 +64,7 @@ function App() {
         handleNumberInput={handleNumberInput}
       />
       <h2>Numbers</h2>
-      <Persons filteredArray={filteredArray} />
+      <Persons filteredArray={filteredArray} handleDelete={handleDelete} />
     </div>
   );
 }

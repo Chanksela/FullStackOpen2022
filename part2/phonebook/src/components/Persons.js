@@ -1,12 +1,13 @@
 import React from "react";
 
-export const Persons = ({ filteredArray }) => {
+export const Persons = ({ filteredArray, handleDelete }) => {
   return (
     <>
       {" "}
-      {filteredArray.map((val) => (
-        <p key={val.name}>
-          {val.name} {val.number}{" "}
+      {filteredArray.map((person) => (
+        <p key={person.name}>
+          {person.name} {person.number}
+          <button onClick={() => handleDelete(person.id)}>Delete</button>
         </p>
       ))}
     </>
