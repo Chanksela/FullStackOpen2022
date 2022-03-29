@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Filter } from "./components/Filter";
 import { PersonForm } from "./components/PersonForm";
 import { Persons } from "./components/Persons";
+import Notification from "./components/Notification";
 import personsService from "./services/persons";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [message, setMessage] = useState(null);
   useEffect(() => {
     personsService.getAll().then((persons) => {
       setPersons(persons);
@@ -22,25 +24,33 @@ function App() {
     );
     const changedNum = { ...newPerson, number: newNumber };
     const id = matchName?.id;
+
     console.log(matchName);
     console.log(newNumber.toString());
     if (matchName && newNumber.length > 0) {
       const result = window.confirm(
         `${newName} already has a number, do you want to update it?`
       );
-      result &&
-        personsService
-          .updateInfo(id, changedNum)
-          .then((returnedPerson) =>
-            setPersons(
-              persons.map((person) =>
-                person.id !== id ? person : returnedPerson
-              )
+      result && setMessage(`Added ${newNumber}`);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+      personsService
+        .updateInfo(id, changedNum)
+        .then((returnedPerson) =>
+          setPersons(
+            persons.map((person) =>
+              person.id !== id ? person : returnedPerson
             )
-          );
+          )
+        );
     } else if (matchName) {
       alert(`${newName} already exists`);
     } else if (!matchName) {
+      setMessage(`Added ${newName}`);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
       personsService
         .addPerson(newPerson)
         .then((addedPerson) => setPersons(persons.concat(addedPerson)));
@@ -73,6 +83,7 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter handleSearchInput={handleSearchInput} searchInput={searchInput} />
       <h1>Add New</h1>
       <PersonForm
