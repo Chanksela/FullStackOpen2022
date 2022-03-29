@@ -3,6 +3,7 @@ import { Filter } from "./components/Filter";
 import { PersonForm } from "./components/PersonForm";
 import { Persons } from "./components/Persons";
 import Notification from "./components/Notification";
+import Error from "./components/Error";
 import personsService from "./services/persons";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
   const [newNumber, setNewNumber] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [message, setMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   useEffect(() => {
     personsService.getAll().then((persons) => {
       setPersons(persons);
@@ -31,29 +33,40 @@ function App() {
       const result = window.confirm(
         `${newName} already has a number, do you want to update it?`
       );
-      result && setMessage(`Added ${newNumber}`);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-      personsService
-        .updateInfo(id, changedNum)
-        .then((returnedPerson) =>
-          setPersons(
-            persons.map((person) =>
-              person.id !== id ? person : returnedPerson
+      if (result) {
+        personsService
+          .updateInfo(id, changedNum)
+          .then((returnedPerson) =>
+            setPersons(
+              persons.map((person) =>
+                person.id !== id ? person : returnedPerson
+              )
             )
           )
-        );
+          .catch(
+            () => setMessage(null),
+            setErrorMessage(
+              `Information about ${newName} already been deleted`
+            ),
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000)
+          );
+        setMessage(`Added ${newNumber}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+      }
     } else if (matchName) {
       alert(`${newName} already exists`);
     } else if (!matchName) {
+      personsService
+        .addPerson(newPerson)
+        .then((addedPerson) => setPersons(persons.concat(addedPerson)));
       setMessage(`Added ${newName}`);
       setTimeout(() => {
         setMessage(null);
       }, 5000);
-      personsService
-        .addPerson(newPerson)
-        .then((addedPerson) => setPersons(persons.concat(addedPerson)));
     }
 
     setNewName("");
@@ -83,6 +96,7 @@ function App() {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Error message={errorMessage} />
       <Notification message={message} />
       <Filter handleSearchInput={handleSearchInput} searchInput={searchInput} />
       <h1>Add New</h1>
