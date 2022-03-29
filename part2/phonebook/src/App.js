@@ -20,13 +20,13 @@ function App() {
     const matchName = persons.filter(
       (person) => person.name.toLowerCase() === newName.toLowerCase()
     );
-
     {
       matchName.length > 0
         ? alert(`${newName}${newNumber} is already added to phonebook`)
-        : setPersons(persons.concat(newPerson));
+        : axios
+            .post("http://localhost:3001/persons", newPerson)
+            .then(setPersons(persons.concat(newPerson)));
     }
-
     setNewName("");
     setNewNumber("");
   };
