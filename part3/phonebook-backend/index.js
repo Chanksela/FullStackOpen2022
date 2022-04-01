@@ -1,6 +1,7 @@
+const { response } = require("express");
 const express = require("express");
 const app = express();
-
+app.use(express.json());
 let persons = [
   {
     id: 1,
@@ -39,6 +40,33 @@ app.get("/api/persons/:id", (req, res) => {
   person
     ? res.json(person)
     : res.status(404).send("<h1>Person Not Found Error 404</h1>").end();
+});
+app.delete("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id);
+  persons = persons.filter((person) => person.id !== id);
+  res.status(204).end();
+});
+
+const generateID = () => {
+  return Math.random() * 100;
+};
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+  if (!body.name && !body.number)
+    return res.status(400).json({ error: "name and number missing" });
+  if (!body.name) return res.status(400).json({ error: "name missing" });
+  if (!body.number) return res.status(400).json({ error: "number missing" });
+
+  const person = { name: body.name, number: body.number, id: generateID() };
+  const matchingName = persons.find(
+    (person) => person.name.toLowerCase() === body.name.toLowerCase()
+  );
+  if (matchingName) {
+    return res.status(409).json({ error: "name already exists" });
+  }
+  persons = persons.concat(person);
+  res.json(person);
 });
 const PORT = 3001;
 app.listen(PORT, () => {
