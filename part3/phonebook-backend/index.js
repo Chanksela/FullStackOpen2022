@@ -1,6 +1,8 @@
-const { response } = require("express");
 const express = require("express");
+const morgan = require("morgan");
+
 const app = express();
+app.use(morgan("tiny"));
 app.use(express.json());
 let persons = [
   {
@@ -48,7 +50,7 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 const generateID = () => {
-  return Math.random() * 100;
+  return Math.floor(Math.random() * 10);
 };
 
 app.post("/api/persons", (req, res) => {
@@ -58,7 +60,7 @@ app.post("/api/persons", (req, res) => {
   if (!body.name) return res.status(400).json({ error: "name missing" });
   if (!body.number) return res.status(400).json({ error: "number missing" });
 
-  const person = { name: body.name, number: body.number, id: generateID() };
+  const person = { id: generateID(), name: body.name, number: body.number };
   const matchingName = persons.find(
     (person) => person.name.toLowerCase() === body.name.toLowerCase()
   );
@@ -68,6 +70,7 @@ app.post("/api/persons", (req, res) => {
   persons = persons.concat(person);
   res.json(person);
 });
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
