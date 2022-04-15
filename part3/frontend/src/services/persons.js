@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseURL = "https://fshpb.herokuapp.com/api/persons";
+const baseURL = "/api/persons";
 const getAll = () => {
   const request = axios.get(baseURL);
   return request.then((res) => res.data);
