@@ -2,6 +2,6 @@
 
 https://fshpb.herokuapp.com/api/persons
 
-### One Page with backend and buil on heroku
+### One Page with backend and build on heroku
 
 https://fshpb.herokuapp.com/
